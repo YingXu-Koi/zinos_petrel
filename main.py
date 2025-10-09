@@ -56,7 +56,7 @@ def log_interaction(user_input, ai_response, intimacy_score, is_sticker_awarded,
             "session_id": session_id,
             "user_msg": user_input,
             "ai_msg": ai_response,
-            "ai_name": "Maria the Zino's Petrel",
+            "ai_name": "Fred the Zino's Petrel",
             "intimacy_score": float(intimacy_score),
             "sticker_awarded": st.session_state.last_sticker,
             "gift_given": gift_given,
@@ -212,7 +212,7 @@ def speak_text(text, loading_placeholder=None):
             loading_placeholder.markdown("""
                 <div class="loading-container">
                     <div class="loading-spinner"></div>
-                    <div>🎤 生成语音中...</div>
+                    <div>🎤 Voice Generating...</div>
                 </div>
             """, unsafe_allow_html=True)
 
