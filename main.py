@@ -593,6 +593,7 @@ def main():
         .message-bubble {
             padding: 12px 16px;
             border-radius: 16px;
+            color: #ffffff;
             word-wrap: break-word;
         }
         
