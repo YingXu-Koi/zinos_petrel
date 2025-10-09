@@ -576,6 +576,29 @@ def main():
             margin-bottom: 16px;
             max-width: 80%;
         }
+
+        /* Chat input text and placeholder styling - WHITE TEXT */
+        .stChatInput input::placeholder {
+            color: white !important;
+            opacity: 1 !important;
+            font-size: 16px;
+        }
+        
+        .stChatInput textarea::placeholder {
+            color: white !important;
+            opacity: 1 !important;
+            font-size: 16px;
+        }
+        
+        .stChatInput input {
+            color: white !important;
+            font-size: 16px;
+        }
+        
+        .stChatInput textarea {
+            color: white !important;
+            font-size: 16px;
+        }
         
         /* User message container - align right */
         .user-container {
