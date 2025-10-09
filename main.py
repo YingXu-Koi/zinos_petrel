@@ -665,7 +665,7 @@ def main():
         .st-key-chat_section{
             display: flex;
             flex-direction: column-reverse;
-            #justify-content: flex-end;
+            justify-content: flex-end;
         }
         /* Remove red border outline from chat input when active */
         .stChatInput div[data-testid="stChatInput"] > div:focus-within {
@@ -677,7 +677,7 @@ def main():
         /* Additional chat input styling */
         .stChatInput > div {
             border-color: #345e42 !important;
-            background-color: rgba(255, 255, 255, 0.8) !important;
+            background-color: #cdd5ae !important
             border-radius: 20px !important;
         }
         
