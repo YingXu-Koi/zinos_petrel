@@ -593,7 +593,6 @@ def main():
         .message-bubble {
             padding: 12px 16px;
             border-radius: 16px;
-            color: #ffffff;
             word-wrap: break-word;
         }
         
@@ -666,7 +665,7 @@ def main():
         .st-key-chat_section{
             display: flex;
             flex-direction: column-reverse;
-            justify-content: flex-end;
+            #justify-content: flex-end;
         }
         /* Remove red border outline from chat input when active */
         .stChatInput div[data-testid="stChatInput"] > div:focus-within {
