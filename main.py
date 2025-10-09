@@ -579,25 +579,27 @@ def main():
 
         /* Chat input text and placeholder styling - WHITE TEXT */
         .stChatInput input::placeholder {
-            color: white !important;
+            color: #a1b065 !important;
             opacity: 1 !important;
             font-size: 16px;
         }
-        
+
         .stChatInput textarea::placeholder {
-            color: white !important;
+            color: #a1b065 !important;
             opacity: 1 !important;
             font-size: 16px;
         }
-        
+
         .stChatInput input {
             color: white !important;
             font-size: 16px;
+            caret-color: white !important;  /* White cursor */
         }
-        
+
         .stChatInput textarea {
             color: white !important;
             font-size: 16px;
+            caret-color: white !important;  /* White cursor */
         }
         
         /* User message container - align right */
