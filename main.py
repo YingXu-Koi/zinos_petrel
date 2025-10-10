@@ -1155,7 +1155,7 @@ def main():
                         """, unsafe_allow_html=True)
                         
                         # 直接使用 st.markdown 渲染，应用样式类
-                        st.markdown(f'<div class="fact-check-box">', unsafe_allow_html=True)
+                        #st.markdown(f'<div class="fact-check-box">', unsafe_allow_html=True)
                         st.markdown(fact_check_summary)
                         st.markdown('</div>', unsafe_allow_html=True)
                         
