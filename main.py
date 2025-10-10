@@ -823,7 +823,7 @@ def main():
     role = list(role_configs.keys())[0]
     role_config = role_configs[role]
 
-    left_col, right_col = st.columns([0.7, 0.3], vertical_alignment="top", gap="large")
+    left_col, right_col = st.columns([0.55, 0.45], vertical_alignment="top", gap="large")
     
     with left_col:
         with open("zino.png", "rb") as img_file:
