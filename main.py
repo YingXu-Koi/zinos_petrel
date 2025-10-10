@@ -740,6 +740,15 @@ def main():
         button[kind="secondary"] {
         
         }
+        /* Style the selectbox options */
+        .stSelectbox [data-testid="stMarkdownContainer"] p {
+            color: white !important;
+        }
+        
+        /* Style the selected value in the dropdown */
+        .stSelectbox div[data-baseweb="select"] > div {
+            color: white !important;
+        }
         .sticker-reward {
             background-color: transparent;
             border: 2px solid #a1b065;
@@ -814,7 +823,7 @@ def main():
     role = list(role_configs.keys())[0]
     role_config = role_configs[role]
 
-    left_col, right_col = st.columns([0.75, 0.25], vertical_alignment="top", gap="large")
+    left_col, right_col = st.columns([0.7, 0.3], vertical_alignment="top", gap="large")
     
     with left_col:
         with open("zino.png", "rb") as img_file:
@@ -979,12 +988,36 @@ def main():
         if st.session_state.language == "Portuguese":
             voice_options = {
                 'Cherry': '🎤 Cherry (Feminina - Animada)',
-                'Ethan': '🎙️ Ethan (Masculina)'
+                'Ethan': '🎙️ Ethan (Masculina)',
+                'Ryan': '🎙️ Ryan (Masculina)',
+                'Eric': '🎙️ Eric (Masculina)',
+                'Jennifer': '🎤 Jennifer (Feminina)',
+                'Katerina': '🎤 Katerina (Feminina)',
+                'Kiki': '🎤 Kiki (Feminina)',
+                'Rocky': '🎙️ Rocky (Masculina)',
+                'Marcus': '🎙️ Marcus (Masculina)',
+                'Nofish': '🎙️ Nofish (Masculina)',
+                'Dylan': '🎙️ Dylan (Masculina)',
+                'Li': '🎙️ Li (Masculina)',
+                'Roy': '🎙️ Roy (Masculina)',
+                'Peter': '🎙️ Peter (Masculina)'
             }
         else:
             voice_options = {
                 'Cherry': '🎤 Cherry (Female - Lively)',
-                'Ethan': '🎙️ Ethan (Male)'
+                'Ethan': '🎙️ Ethan (Male)',
+                'Ryan': '🎙️ Ryan (Male)',
+                'Eric': '🎙️ Eric (Male)',
+                'Jennifer': '🎤 Jennifer (Female)',
+                'Katerina': '🎤 Katerina (Female)',
+                'Kiki': '🎤 Kiki (Female)',
+                'Rocky': '🎙️ Rocky (Male)',
+                'Marcus': '🎙️ Marcus (Male)',
+                'Nofish': '🎙️ Nofish (Male)',
+                'Dylan': '🎙️ Dylan (Male)',
+                'Li': '🎙️ Li (Male)',
+                'Roy': '🎙️ Roy (Male)',
+                'Peter': '🎙️ Peter (Male)'
             }
         
         voice_labels = list(voice_options.values())
