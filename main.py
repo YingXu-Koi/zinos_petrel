@@ -29,7 +29,8 @@ import streamlit.components.v1 as components
 from st_supabase_connection import SupabaseConnection, execute_query
 import hashlib
 
-conn = st.connection("supabase",type=SupabaseConnection)
+def get_supabase_connection():
+    return st.connection("supabase", type=SupabaseConnection)
 
 def get_session_id():
     if "session_id" not in st.session_state:
@@ -56,13 +57,14 @@ def log_interaction(user_input, ai_response, intimacy_score, is_sticker_awarded,
             "session_id": session_id,
             "user_msg": user_input,
             "ai_msg": ai_response,
-            "ai_name": "Fred the Zino's Petrel",
+            "ai_name": "Maria the Zino's Petrel",
             "intimacy_score": float(intimacy_score),
             "sticker_awarded": st.session_state.last_sticker,
             "gift_given": gift_given,
             "response_analysis": response_analysis
         }
 
+        conn = get_supabase_connection()
         execute_query(conn.table("interactions").insert(data, count="None"), ttl='0')
         print(f"Logged interaction to Supabase: {session_id}")
         return True
