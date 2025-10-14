@@ -1149,6 +1149,7 @@ def main():
                 """,
                 unsafe_allow_html=True
             )
+            
         # Fact Check Section
         st.markdown(f"""
             <div style="font-size:18px; font-style: italic; font-weight:bold; color:#31333e; text-align: left;">
@@ -1198,6 +1199,7 @@ def main():
                         with st.expander("📄 查看原始文档 / View Raw Documents", expanded=False):
                             for i, doc in enumerate(st.session_state.most_relevant_texts[:2], 1):
                                 source = doc.metadata.get('source_file', 'Unknown')
+                                page = doc.metadata.get('page', 'N/A')
                                 friendly_name = get_friendly_filename(source)
                                 st.markdown(f"**{i}. {friendly_name} (Page {page})**")
                                 st.text(doc.page_content[:500] + "..." if len(doc.page_content) > 500 else doc.page_content)
