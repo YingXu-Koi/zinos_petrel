@@ -9,6 +9,39 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def get_friendly_filename(source_file):
+    """
+    Convert technical source file names to user-friendly names
+    """
+    filename_mapping = {
+        # Your Excel mappings
+        '41_S_1-43.pdf': 'Simons et al 2013 - Diablotin Pterodroma hasitata Biography of the Black-capped Petrel',
+        '2024FloodZinos1stBritain.pdf': 'Flood 2024 - Zino\'s Petrel off Scilly new to Britain',
+        '3906_pterodroma_madeira.pdf': 'BirdLife International 2021 - Pterodroma madeira Zinos Petrel',
+        'Conservation_of_Zinos_petrel_Pterodroma.pdf': 'Zino et al 2001 - Conservation of Zinos petrel Pterodroma madeira in Madeira',
+        'conservation-of-zinos-petrel-pterodroma-madeira-in-the-archipelago-of-madeira.pdf': 'Zino et al 2001 - Conservation of Zinos petrel Pterodroma madeira in Madeira',
+        'Madeira_Zinos_Petrel_2010_0.pdf': 'BirdLife International 2010 - Race against the clock to save Zinos Petrel',
+        'Madeira-2021.pdf': 'Flood 2021 - ORIOLE BIRDING TOUR TO MADEIRA ENDEMICS AND SEABIRDS 5-9 JULY 2021',
+        'madeira-2024-text.pdf': 'Koppenol 2024 - MADEIRA TOUR REPORT 2024',
+        'Madeira2004_NB.pdf': 'Brinkley 2004 - Zinos Petrel at sea off Madeira 27 April 2004',
+        'pterodromaRefs_v1.15.pdf': 'Hobbs 2017 - Pterodroma Reference List - Comprehensive bibliography of gadfly petrels',
+        'Shirihai_Jamaica_AtSea_Nov09.pdf': 'Shirihai et al 2010 - Jamaica Petrel Pterodroma caribbaea Pelagic expedition report',
+        'srep23447.pdf': 'Ramos et al 2016 - Global spatial ecology of three closely related gadfly petrels',
+        'The_separation_of_Pterodroma_madeira_Zin.pdf': 'Zino et al 2008 - The separation of Pterodroma madeira from Pterodroma feae',
+        'v36n6p586.pdf': 'Patteson & Brinkley 2004 - A Petrel Primer - The Gadflies of North Carolina',
+        'v40n6p28.pdf': 'Hess 2008 - Feas or Zinos Petrel',
+        'Zino_s_Petrel_Pterodroma_madeira_off_Nor.pdf': 'Patteson et al 2013 - Zinos Petrel Pterodroma madeira off North Carolina - First for North America',
+        'zinos-petrel-1995.pdf': 'Zino et al 1995 - Action Plan for Zinos Petrel Pterodroma madeira',
+        'zlae123.pdf': 'Rando et al 2024 - Pterodroma zinorum Biography of an extinct Azorean petrel',
+        
+        # Default fallback
+        'unknown': 'Unknown Document'
+    }
+    
+    base_name = os.path.basename(source_file) if source_file else 'unknown'
+    return filename_mapping.get(base_name, base_name.replace('_', ' ').replace('-', ' ').title())
+
+
 def summarize_fact_check(question, retrieved_docs, ai_answer, language="English"):
     """
     对 Fact-Check 内容进行智能摘要
@@ -30,9 +63,11 @@ def summarize_fact_check(question, retrieved_docs, ai_answer, language="English"
         content = doc.page_content[:500]  # 每个文档最多500字符
         source = doc.metadata.get('source_file', 'Unknown')
         page = doc.metadata.get('page', 'N/A')
+
+        friendly_name = get_friendly_filename(source)
         
-        doc_contents.append(f"[Source {i}: {source}, Page {page}]\n{content}")
-        sources.append(f"{source} (p.{page})")
+        doc_contents.append(f"[Source {i}: {friendly_name}, Page {page}]\n{content}")
+        sources.append(f"{friendly_name} (p.{page})")
     
     combined_docs = "\n\n".join(doc_contents)
     
@@ -100,10 +135,14 @@ def summarize_fact_check(question, retrieved_docs, ai_answer, language="English"
     except Exception as e:
         print(f"[Fact-Check] 摘要生成失败: {str(e)}")
         # 降级：返回简化的文档内容
+        source = retrieved_docs[0].metadata.get('source_file', 'Unknown')
+        page = retrieved_docs[0].metadata.get('page', 'N/A')
+        friendly_name = get_friendly_filename(source)
+        
         if language == "Portuguese":
-            return f"📄 Informação extraída dos documentos:\n\n{retrieved_docs[0].page_content[:200]}...\n\n📚 Fonte: {sources[0]}"
+            return f"📄 Informação extraída dos documentos:\n\n{retrieved_docs[0].page_content[:200]}...\n\n📚 Fonte: {friendly_name} (p.{page})"
         else:
-            return f"📄 Information from documents:\n\n{retrieved_docs[0].page_content[:200]}...\n\n📚 Source: {sources[0]}"
+            return f"📄 Information from documents:\n\n{retrieved_docs[0].page_content[:200]}...\n\n📚 Source: {friendly_name} (p.{page})"
 
 
 def optimize_search_query(question, retrieved_docs):
