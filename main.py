@@ -29,47 +29,55 @@ import streamlit.components.v1 as components
 from st_supabase_connection import SupabaseConnection, execute_query
 import hashlib
 
+@st.cache_resource
 def get_supabase_connection():
+    """Safely create and reuse the Supabase connection."""
     return st.connection("supabase", type=SupabaseConnection)
 
+# --- 2. Session ID helper stays unchanged ---
 def get_session_id():
     if "session_id" not in st.session_state:
         st.session_state.session_id = str(uuid.uuid4())
     return st.session_state.session_id
 
+# --- 3. Logging interactions (no caching!) ---
 def log_interaction(user_input, ai_response, intimacy_score, is_sticker_awarded, gift_given=False):
     try:
         session_id = get_session_id()
-        
-        if is_sticker_awarded:
-            # Extract sticker type from the image path (e.g., "stickers/home.png" -> "home")
-            st.session_state.last_sticker = st.session_state.awarded_stickers[-1]["image"].split("/")[-1].split(".")[0]
+
+        # Determine sticker type if one was awarded
+        if is_sticker_awarded and st.session_state.get("awarded_stickers"):
+            last_awarded = st.session_state.awarded_stickers[-1]["image"]
+            st.session_state.last_sticker = last_awarded.split("/")[-1].split(".")[0]
         else:
             st.session_state.last_sticker = None
 
-        # Get response analysis data
-        response_analysis = {}
-        if hasattr(st.session_state, 'last_analysis'):
-            response_analysis = st.session_state.last_analysis
-            
-        # Insert the interaction record
+        # Retrieve analysis metadata if available
+        response_analysis = getattr(st.session_state, "last_analysis", {})
+
+        # Prepare record
         data = {
             "session_id": session_id,
             "user_msg": user_input,
             "ai_msg": ai_response,
-            "ai_name": "Maria the Zino's Petrel",
+            "ai_name": "Fred the Zino's Petrel",
             "intimacy_score": float(intimacy_score),
             "sticker_awarded": st.session_state.last_sticker,
             "gift_given": gift_given,
             "response_analysis": response_analysis
         }
 
+        # Get cached connection (safe) and insert record
         conn = get_supabase_connection()
-        execute_query(conn.table("interactions").insert(data, count="None"), ttl='0')
-        print(f"Logged interaction to Supabase: {session_id}")
+
+        # Use Supabase’s direct insert (no caching or custom hash functions)
+        conn.table("interactions").insert(data).execute()
+
+        print(f"✅ Logged interaction to Supabase: {session_id}")
         return True
+
     except Exception as e:
-        print(f"Failed to log interaction: {str(e)}")
+        print(f"❌ Failed to log interaction: {e}")
         return False
 
 # 配置 Qwen API Key
