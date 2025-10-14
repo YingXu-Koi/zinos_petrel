@@ -13,7 +13,7 @@ import uuid
 import time
 from tts_utils import speak as tts_speak, cleanup_audio_files as tts_cleanup
 from rag_utils import get_rag_instance
-from fact_check_utils import generate_fact_check_content
+from fact_check_utils import get_friendly_filename, generate_fact_check_content
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import Tongyi
@@ -1198,8 +1198,8 @@ def main():
                         with st.expander("📄 查看原始文档 / View Raw Documents", expanded=False):
                             for i, doc in enumerate(st.session_state.most_relevant_texts[:2], 1):
                                 source = doc.metadata.get('source_file', 'Unknown')
-                                page = doc.metadata.get('page', 'N/A')
-                                st.markdown(f"**{i}. {source} (Page {page})**")
+                                friendly_name = get_friendly_filename(source)
+                                st.markdown(f"**{i}. {friendly_name} (Page {page})**")
                                 st.text(doc.page_content[:500] + "..." if len(doc.page_content) > 500 else doc.page_content)
                                 st.markdown("---")
                     
