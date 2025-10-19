@@ -319,8 +319,8 @@ role_configs = {
         Podes usar estes factos se for útil: {input_documents}
         """,
         "voice": {
-            "English": "Cherry",
-            "Portuguese": "Cherry"
+            "English": "Roy",
+            "Portuguese": "Roy"
         },
         'intro_audio': 'intro5.mp3',
         'persist_directory': 'db5_qwen',
@@ -482,7 +482,10 @@ language_texts = {
             </ul>
             <p style="margin-top: 10px;">💬 The more positive you are, the higher your score! 🌱✨ But watch out — unkind words or harmful ideas can lower your score. 🚫</p>
         </div>
-        """
+        """,
+        "tips_help": "Click to see tips on how to get a higher Friendship Score!",
+        "clear_help": "Click to clear the chat history and start fresh!",
+        "score_guide_title": "💡How the 'Friendship Score!' Works"
     },
     "Portuguese": {
         "title": "Olá! Eu sou o Fred,",
@@ -523,7 +526,10 @@ language_texts = {
             </ul>
             <p style="margin-top: 10px;">💬 Quanto mais positivo fores, maior será a tua pontuação! 🌱✨ Mas cuidado — palavras rudes ou ideias prejudiciais podem baixar a tua pontuação. 🚫</p>
         </div>
-        """
+        """,
+        "tips_help": "Clica para veres dicas sobre como obteres uma Pontuação de Amizade mais alta!",
+        "clear_help": "Clica para limpar o histórico da conversa e começares de novo!",
+        "score_guide_title": "💡Como Funciona a 'Pontuação de Amizade'!"
     }
 }
 # UI
@@ -531,7 +537,10 @@ def main():
     # Language state (initialize first)
     if "language" not in st.session_state:
         st.session_state.language = "English"  # Default language
-    
+        
+    if 'tts_voice' not in st.session_state:
+        st.session_state.tts_voice = 'Roy' 
+        
     # Get current language texts
     texts = language_texts[st.session_state.language]
     
@@ -578,6 +587,44 @@ def main():
         .stApp {
             background: #cdd5ae;
         }
+        
+        /* 响应式字体大小 */
+        @media (max-width: 768px) {
+            .responsive-title {
+                font-size: 2rem !important;
+            }
+            .responsive-subtitle {
+                font-size: 2rem !important;
+            }
+            .responsive-prompt {
+                font-size: 1rem !important;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .responsive-title {
+                font-size: 2.5rem !important;
+            }
+            .responsive-subtitle {
+                font-size: 2.5rem !important;
+            }
+            .responsive-prompt {
+                font-size: 1.125rem !important;
+            }
+        }
+        
+        @media (min-width: 1201px) {
+            .responsive-title {
+                font-size: 3rem !important;
+            }
+            .responsive-subtitle {
+                font-size: 3rem !important;
+            }
+            .responsive-prompt {
+                font-size: 1.25rem !important;
+            }
+        }
+
         /* Chat message container */
         .chat-message-container {
             display: flex;
@@ -593,7 +640,7 @@ def main():
         }
 
         .stChatInput textarea::placeholder {
-            color: #a1b065 !important;
+            color: #888888 !important;
             opacity: 1 !important;
             font-size: 16px;
         }
@@ -601,13 +648,32 @@ def main():
         .stChatInput input {
             color: white !important;
             font-size: 16px;
-            caret-color: white !important;  /* White cursor */
+            caret-color: #888888 !important;  /* White cursor */
         }
 
         .stChatInput textarea {
-            color: white !important;
+            color: #2d4f38!important;
             font-size: 16px;
-            caret-color: white !important;  /* White cursor */
+            caret-color: #888888 !important;  /* White cursor */
+        }
+        
+        /* 修复聊天输入框背景色 - 改为白色 */
+        .stChatInput > div {
+            border-color: #345e42 !important;
+            background-color: white !important;
+            border-radius: 20px !important;
+        }
+        
+        /* 输入框内部背景色 */
+        .stChatInput input, .stChatInput textarea {
+            background-color: white !important;
+            color: #2d4f38 !important;  /* 改为深色文字 */
+        }
+        
+        /* 输入框聚焦状态 */
+        .stChatInput div[data-testid="stChatInput"]:focus-within {
+            border-color: #a1b065 !important;
+            box-shadow: 0 0 0 2px rgba(161, 176, 101, 0.3) !important;
         }
         
         /* User message container - align right */
@@ -705,13 +771,6 @@ def main():
             box-shadow: none !important;
             border-color: #a1b065 !important;
             border-width: 1px !important;
-        }
-        
-        /* Additional chat input styling */
-        .stChatInput > div {
-            border-color: #345e42 !important;
-            background-color: #cdd5ae !important
-            border-radius: 20px !important;
         }
         
         /* Change chat input focus state */
@@ -987,79 +1046,22 @@ def main():
                 st.session_state.language = "Portuguese"
                 st.rerun()
         
-        # Voice selector
-        st.markdown(f"**{texts['voice_selector']}**")
-        if 'tts_voice' not in st.session_state:
-            st.session_state.tts_voice = 'Cherry'
-        
-        # Voice options with descriptions
-        if st.session_state.language == "Portuguese":
-            voice_options = {
-                'Cherry': '🎤 Cherry (Feminina - Animada)',
-                'Ethan': '🎙️ Ethan (Masculina)',
-                'Ryan': '🎙️ Ryan (Masculina)',
-                'Eric': '🎙️ Eric (Masculina)',
-                'Jennifer': '🎤 Jennifer (Feminina)',
-                'Katerina': '🎤 Katerina (Feminina)',
-                'Kiki': '🎤 Kiki (Feminina)',
-                'Rocky': '🎙️ Rocky (Masculina)',
-                'Marcus': '🎙️ Marcus (Masculina)',
-                'Nofish': '🎙️ Nofish (Masculina)',
-                'Dylan': '🎙️ Dylan (Masculina)',
-                'Li': '🎙️ Li (Masculina)',
-                'Roy': '🎙️ Roy (Masculina)',
-                'Peter': '🎙️ Peter (Masculina)'
-            }
-        else:
-            voice_options = {
-                'Cherry': '🎤 Cherry (Female - Lively)',
-                'Ethan': '🎙️ Ethan (Male)',
-                'Ryan': '🎙️ Ryan (Male)',
-                'Eric': '🎙️ Eric (Male)',
-                'Jennifer': '🎤 Jennifer (Female)',
-                'Katerina': '🎤 Katerina (Female)',
-                'Kiki': '🎤 Kiki (Female)',
-                'Rocky': '🎙️ Rocky (Male)',
-                'Marcus': '🎙️ Marcus (Male)',
-                'Nofish': '🎙️ Nofish (Male)',
-                'Dylan': '🎙️ Dylan (Male)',
-                'Li': '🎙️ Li (Male)',
-                'Roy': '🎙️ Roy (Male)',
-                'Peter': '🎙️ Peter (Male)'
-            }
-        
-        voice_labels = list(voice_options.values())
-        voice_keys = list(voice_options.keys())
-        current_index = voice_keys.index(st.session_state.tts_voice)
-        
-        selected_label = st.selectbox(
-            label="Voice",
-            options=voice_labels,
-            index=current_index,
-            key='voice_selector',
-            label_visibility="collapsed"
-        )
-        
-        # Update session state with selected voice key
-        selected_key = voice_keys[voice_labels.index(selected_label)]
-        st.session_state.tts_voice = selected_key
-        
         # Tips and Clear buttons
         input_section_col1, input_section_col2 = st.columns([0.35, 0.65], gap="small")
         with input_section_col1:
             # Show guide if toggled
-            @st.dialog("💡How the 'Friendship Score!' Works", width="large")
+            @st.dialog(texts['score_guide_title'], width="large") 
             def score_guide():
                 st.markdown(texts['tips_content'], unsafe_allow_html=True)
                 
             if st.button(texts['tips_button'], icon=":material/lightbulb:", 
-                        help="Click to see tips on how to get a higher Friendship Score!", 
+                        help=texts['tips_help'], 
                         use_container_width=True, type="primary"):
                 score_guide()
                 
         with input_section_col2:
             if st.button(texts['clear_button'], icon=":material/chat_add_on:", 
-                        help="Click to clear the chat history and start fresh!", 
+                        help=texts['clear_help'],  
                         use_container_width=True):
                 st.session_state.chat_history = []
                 st.session_state.show_score_guide = False
@@ -1200,17 +1202,7 @@ def main():
                         #st.markdown(f'<div class="fact-check-box">', unsafe_allow_html=True)
                         st.markdown(fact_check_summary)
                         st.markdown('</div>', unsafe_allow_html=True)
-                        
-                        # 可选：显示原始文档（折叠状态）
-                        with st.expander("📄 查看原始文档 / View Raw Documents", expanded=False):
-                            for i, doc in enumerate(st.session_state.most_relevant_texts[:2], 1):
-                                source = doc.metadata.get('source_file', 'Unknown')
-                                page = doc.metadata.get('page', 'N/A')
-                                friendly_name = get_friendly_filename(source)
-                                st.markdown(f"**{i}. {friendly_name} (Page {page})**")
-                                st.text(doc.page_content[:500] + "..." if len(doc.page_content) > 500 else doc.page_content)
-                                st.markdown("---")
-                    
+
                     except Exception as e:
                         # 降级：显示原始内容
                         print(f"[Fact-Check] 摘要生成失败: {str(e)}")
