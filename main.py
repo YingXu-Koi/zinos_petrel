@@ -34,13 +34,11 @@ def get_supabase_connection():
     """Safely create and reuse the Supabase connection."""
     return st.connection("supabase", type=SupabaseConnection)
 
-# --- 2. Session ID helper stays unchanged ---
 def get_session_id():
     if "session_id" not in st.session_state:
         st.session_state.session_id = str(uuid.uuid4())
     return st.session_state.session_id
 
-# --- 3. Logging interactions (no caching!) ---
 def log_interaction(user_input, ai_response, intimacy_score, is_sticker_awarded, gift_given=False):
     try:
         session_id = get_session_id()
